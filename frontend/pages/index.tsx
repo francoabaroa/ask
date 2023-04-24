@@ -35,6 +35,14 @@ function AskQuestionButton({ onClick }) {
   );
 }
 
+function AnswerDisplay({ answer }) {
+  return (
+    <div className="border border-gray-300 p-4 mt-4">
+      <h3 className="font-bold">Answer:</h3>
+      <p>{answer}</p>
+    </div>
+  );
+}
 export default function Home() {
   return (
     <main
@@ -47,6 +55,7 @@ export default function Home() {
       </div>
       <QuestionInput />
       <AskQuestionButton />
+      <AnswerDisplay />
     </main>
   )
 }
