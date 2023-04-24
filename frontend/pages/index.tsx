@@ -15,7 +15,22 @@ export default function Home() {
     setQuestion(newQuestion);
   };
 
-  const handleAskQuestionClick = async () => {};
+  const handleAskQuestionClick = async () => {
+    const response = await fetch('http://localhost:4000/api/v1/questions/ask', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ question }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setAnswer(data.answer);
+    } else {
+      console.error('Error fetching answer:', response.statusText);
+    }
+  };
 
   return (
     <main

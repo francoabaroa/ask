@@ -3,9 +3,11 @@ module Api
     class QuestionsController < ApplicationController
       def ask
         question = params[:question]
-        answer = "Test Answer"
 
-        render json: { answer: answer }
+        # Temporary for testing
+        answer = question
+
+        render json: { answer: question }
       end
 
       private
