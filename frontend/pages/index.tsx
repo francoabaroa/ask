@@ -24,6 +24,17 @@ function QuestionInput({ onQuestionChange }) {
   );
 }
 
+function AskQuestionButton({ onClick }) {
+  return (
+    <button
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      onClick={onClick}
+    >
+      Ask question
+    </button>
+  );
+}
+
 export default function Home() {
   return (
     <main
@@ -35,6 +46,7 @@ export default function Home() {
         </p>
       </div>
       <QuestionInput />
+      <AskQuestionButton />
     </main>
   )
 }
