@@ -4,6 +4,26 @@ import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
 
+function QuestionInput({ onQuestionChange }) {
+  const [question, setQuestion] = useState('');
+
+  const handleChange = (event: any) => {
+    const newQuestion = event.target.value;
+    setQuestion(newQuestion);
+    onQuestionChange(newQuestion);
+  };
+
+  return (
+    <input
+      className="border border-gray-300 p-2"
+      type="text"
+      value={question}
+      onChange={handleChange}
+      placeholder="Type your question here"
+    />
+  );
+}
+
 export default function Home() {
   return (
     <main
@@ -14,6 +34,7 @@ export default function Home() {
           Ask
         </p>
       </div>
+      <QuestionInput />
     </main>
   )
 }
