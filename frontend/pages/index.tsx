@@ -1,49 +1,22 @@
 import { useState } from 'react';
-import Image from 'next/image'
 import { Inter } from 'next/font/google'
+
+import QuestionInput from './components/QuestionInput';
+import AskQuestionButton from './components/AskQuestionButton';
+import AnswerDisplay from './components/AnswerDisplay';
 
 const inter = Inter({ subsets: ['latin'] })
 
-function QuestionInput({ onQuestionChange }) {
+export default function Home() {
   const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
 
-  const handleChange = (event: any) => {
-    const newQuestion = event.target.value;
+  const handleQuestionChange = (newQuestion) => {
     setQuestion(newQuestion);
-    onQuestionChange(newQuestion);
   };
 
-  return (
-    <input
-      className="border border-gray-300 p-2"
-      type="text"
-      value={question}
-      onChange={handleChange}
-      placeholder="Type your question here"
-    />
-  );
-}
+  const handleAskQuestionClick = async () => {};
 
-function AskQuestionButton({ onClick }) {
-  return (
-    <button
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      onClick={onClick}
-    >
-      Ask question
-    </button>
-  );
-}
-
-function AnswerDisplay({ answer }) {
-  return (
-    <div className="border border-gray-300 p-4 mt-4">
-      <h3 className="font-bold">Answer:</h3>
-      <p>{answer}</p>
-    </div>
-  );
-}
-export default function Home() {
   return (
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
@@ -53,9 +26,9 @@ export default function Home() {
           Ask
         </p>
       </div>
-      <QuestionInput />
-      <AskQuestionButton />
-      <AnswerDisplay />
+      <QuestionInput onQuestionChange={handleQuestionChange} />
+      <AskQuestionButton onClick={handleAskQuestionClick} />
+      <AnswerDisplay answer={answer} />
     </main>
   )
 }
