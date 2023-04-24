@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      get 'questions/ask', to: 'questions#ask'
+      post 'questions/ask', to: 'questions#ask'
     end
   end
 end
