@@ -2,9 +2,7 @@ require 'csv'
 require 'ruby/openai'
 require 'json'
 require 'dotenv'
-require 'resemble'
-require 'nmatrix'
-require 'numo/narray'
+require 'gsl'
 
 Dotenv.load('.env')
 
@@ -37,10 +35,12 @@ module Api
         # Check cache if question already exists
 
         # Read pages.csv file
-        df = CSV.read('pdf-sample.pdf.pages.csv', headers: true)
+        pages_csv = '/Users/francoabaroa/Desktop/Hack_Reactor/Repos/openSource/ask/backend/resources/pdf-sample.pdf.pages.csv'
+        df = CSV.read(pages_csv, headers: true)
 
         # Load embeddings embeddings.csv file
-        document_embeddings = load_embeddings('pdf-sample.pdf.embeddings.csv')
+        embeddings_csv = '/Users/francoabaroa/Desktop/Hack_Reactor/Repos/openSource/ask/backend/resources/pdf-sample.pdf.embeddings.csv'
+        document_embeddings = load_embeddings(embeddings_csv)
 
         # Answer question with context and get answer and context for saving
         answer, context = answer_query_with_context(question, df, document_embeddings)
@@ -55,11 +55,9 @@ module Api
       private
 
       def load_embeddings(fname)
-        """
-        Read the document embeddings and their keys from a CSV.
-        fname is the path to a CSV with exactly these named columns:
-            "title", "0", "1", ... up to the length of the embedding vectors.
-        """
+        # Read the document embeddings and their keys from a CSV.
+        # fname is the path to a CSV with exactly these named columns:
+        # "title", "0", "1", ... up to the length of the embedding vectors.
         df = CSV.read(fname, headers: true)
         max_dim = df.headers.map(&:to_i).max
         df.each_with_object({}) do |row, h|
@@ -77,14 +75,9 @@ module Api
       end
 
       def vector_similarity(x, y)
-        NMatrix[x] * NMatrix[y]
-      end
-
-      # Delete after figuring out which one to use
-      def vector_similarity2(x, y)
-        x_narray = Numo::DFloat[*x]
-        y_narray = Numo::DFloat[*y]
-        (x_narray * y_narray).sum
+        x_vec = GSL::Vector.alloc(x)
+        y_vec = GSL::Vector.alloc(y)
+        x_vec * y_vec
       end
 
       def answer_query_with_context(query, df, document_embeddings)

@@ -5,7 +5,7 @@ ruby '2.7.0'
 
 gem 'rack-cors'
 gem 'dotenv'
-gem 'pandas'
+gem 'gsl'
 gem 'ruby-openai'
 gem 'pdf-reader'
 gem 'csv'
