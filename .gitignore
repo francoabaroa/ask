@@ -1,3 +1,6 @@
 .DS_Store
+
+PM.md
+
 /frontend/node_modules
 /backend/node_modules
