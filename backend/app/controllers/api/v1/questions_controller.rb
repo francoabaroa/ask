@@ -17,6 +17,7 @@ module Api
         df = CSV.read('pdf-sample.pdf.pages.csv', headers: true)
 
         # Load embeddings embeddings.csv file
+        document_embeddings = load_embeddings('pdf-sample.pdf.embeddings.csv')
 
         # Answer question with context and get answer and context for saving
 
@@ -31,6 +32,14 @@ module Api
       end
 
       private
+
+      def load_embeddings(fname)
+        df = CSV.read(fname, headers: true)
+        max_dim = df.headers.map(&:to_i).max
+        df.each_with_object({}) do |row, h|
+          h[row['title']] = (0..max_dim).map { |i| row[i.to_s].to_f }
+        end
+      end
 
       def search_book_embeddings(question)
         # Implementation
