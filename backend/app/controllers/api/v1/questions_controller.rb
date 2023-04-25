@@ -1,5 +1,10 @@
 require 'csv'
 require 'ruby/openai'
+require 'json'
+require 'dotenv'
+require 'resemble'
+require 'nmatrix'
+require 'numo/narray'
 
 # use ada cause newer and cheaper, can replace DOC and QUERY and SEARCH
 DOC_EMBEDDINGS_MODEL_ADA = "text-embedding-ada-002"
