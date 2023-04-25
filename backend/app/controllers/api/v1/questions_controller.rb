@@ -68,8 +68,10 @@ module Api
       def get_embedding(text)
         client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
         result = client.embeddings(
-          engine: DOC_EMBEDDINGS_MODEL_ADA,
-          prompt: text
+            parameters: {
+                model: DOC_EMBEDDINGS_MODEL_ADA,
+                input: text
+            }
         )
         result['choices'][0]['text'].strip
       end
