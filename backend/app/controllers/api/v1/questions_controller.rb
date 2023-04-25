@@ -1,3 +1,5 @@
+require 'csv'
+
 module Api
   module V1
     class QuestionsController < ApplicationController
@@ -12,6 +14,7 @@ module Api
         # Check cache if question already exists
 
         # Read pages.csv file
+        df = CSV.read('pdf-sample.pdf.pages.csv', headers: true)
 
         # Load embeddings embeddings.csv file
 
