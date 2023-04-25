@@ -11,9 +11,6 @@ Dotenv.load('.env')
 # tokenizer = Tokenizers.from_pretrained("gpt2")
 # tokenizer = Tokenizers::Tokenizer.from_pretrained("gpt2")
 
-COMPLETIONS_MODEL = "text-davinci-003"
-MODEL_NAME = "curie"
-
 # use ada cause newer and cheaper
 DOC_EMBEDDINGS_MODEL_ADA = "text-embedding-ada-002"
 
