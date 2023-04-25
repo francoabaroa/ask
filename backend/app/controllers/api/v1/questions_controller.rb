@@ -4,6 +4,20 @@ module Api
       def ask
         question = params[:question]
 
+        # Check if question ends in ?
+
+        # Check cache if question already exists
+
+        # Read pages.csv file
+
+        # Load embeddings embeddings.csv file
+
+        # Answer question with context and get answer and context for saving
+
+        # Cache answer, context, question
+
+        # Return answer
+
         # Temporary for testing
         answer = question
 
