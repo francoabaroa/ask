@@ -5,6 +5,9 @@ module Api
         question = params[:question]
 
         # Check if question ends in ?
+        unless question.end_with?('?')
+          question += '?'
+        end
 
         # Check cache if question already exists
 
