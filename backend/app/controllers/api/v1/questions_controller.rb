@@ -74,6 +74,17 @@ module Api
         result['choices'][0]['text'].strip
       end
 
+      def vector_similarity(x, y)
+        NMatrix[x] * NMatrix[y]
+      end
+
+      # Delete after figuring out which one to use
+      def vector_similarity2(x, y)
+        x_narray = Numo::DFloat[*x]
+        y_narray = Numo::DFloat[*y]
+        (x_narray * y_narray).sum
+      end
+
       def search_book_embeddings(question)
         # Implementation
       end
