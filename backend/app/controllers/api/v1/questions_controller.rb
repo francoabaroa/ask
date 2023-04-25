@@ -10,6 +10,18 @@ Dotenv.load('.env')
 
 # use ada cause newer and cheaper, can replace DOC and QUERY and SEARCH
 DOC_EMBEDDINGS_MODEL_ADA = "text-embedding-ada-002"
+COMPLETIONS_MODEL = 'text-davinci-003'
+MODEL_NAME = 'curie'
+
+MAX_SECTION_LEN = 500
+SEPARATOR = "\n* "
+separator_len = 3
+
+COMPLETIONS_API_PARAMS = {
+  'temperature' => 0.0,
+  'max_tokens' => 150,
+  'model' => COMPLETIONS_MODEL
+}
 
 module Api
   module V1
