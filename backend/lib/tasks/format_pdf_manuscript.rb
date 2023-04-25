@@ -44,7 +44,6 @@ def get_embedding(text, model)
           input: text
       }
   )
-  puts result["data"][0]["embedding"]
   result["data"][0]["embedding"]
 end
 
@@ -81,7 +80,6 @@ end
 doc_embeddings = compute_doc_embeddings(res)
 
 CSV.open("#{pdf_filename}.embeddings.csv", "w") do |csv|
-  puts 'writing file!'
   csv << ["title"] + (0..4095).to_a
   doc_embeddings.each do |index, embedding|
     csv << ["Page #{index + 1}"] + embedding
