@@ -1,4 +1,8 @@
 require 'csv'
+require 'ruby/openai'
+
+# use ada cause newer and cheaper, can replace DOC and QUERY and SEARCH
+DOC_EMBEDDINGS_MODEL_ADA = "text-embedding-ada-002"
 
 module Api
   module V1
@@ -21,6 +25,7 @@ module Api
 
         # Answer question with context and get answer and context for saving
 
+
         # Cache answer, context, question
 
         # Return answer
@@ -39,6 +44,15 @@ module Api
         df.each_with_object({}) do |row, h|
           h[row['title']] = (0..max_dim).map { |i| row[i.to_s].to_f }
         end
+      end
+
+      def get_embedding(text, model)
+        client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
+        result = client.completions(
+          engine: DOC_EMBEDDINGS_MODEL_ADA,
+          prompt: text
+        )
+        result['choices'][0]['text'].strip
       end
 
       def search_book_embeddings(question)
