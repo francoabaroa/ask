@@ -1,15 +1,10 @@
 require 'dotenv'
-require 'ruby/openai'
+require 'openai'
 require 'pdf-reader'
 require 'csv'
 require 'tokenizers'
 
 Dotenv.load('.env')
-
-# GPT2 Tokenizer Not Working
-# tokenizer = RubyTokenizer::GPT2Tokenizer.new
-# tokenizer = Tokenizers.from_pretrained("gpt2")
-# tokenizer = Tokenizers::Tokenizer.from_pretrained("gpt2")
 
 # use ada cause newer and cheaper
 DOC_EMBEDDINGS_MODEL_ADA = "text-embedding-ada-002"
@@ -20,8 +15,6 @@ def word_count(text)
 end
 
 def count_tokens(text)
-  # GPT2 Tokenizer Not Working
-  # tokenizer.encode(text).size
   word_count(text)
 end
 
@@ -75,9 +68,8 @@ CSV.open("#{pdf_filename}.pages.csv", 'w') do |csv|
 end
 
 doc_embeddings = compute_doc_embeddings(res)
-
 CSV.open("#{pdf_filename}.embeddings.csv", "w") do |csv|
-  csv << ["title"] + (0..4095).to_a
+  csv << ["title"] + (0..doc_embeddings.values.first.length - 1).to_a
   doc_embeddings.each do |index, embedding|
     csv << ["Page #{index + 1}"] + embedding
   end
