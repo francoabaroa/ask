@@ -7,16 +7,15 @@ interface QuestionInputProps {
 const QuestionInput: React.FC<QuestionInputProps> = ({ onQuestionChange }) => {
   const [question, setQuestion] = useState('');
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newQuestion = event.target.value;
     setQuestion(newQuestion);
     onQuestionChange(newQuestion);
   };
 
   return (
-    <input
+    <textarea
       className="border border-gray-300 p-2"
-      type="text"
       value={question}
       onChange={handleChange}
       placeholder="Type your question here"

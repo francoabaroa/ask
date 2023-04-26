@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Inter } from 'next/font/google'
+import Image from 'next/image';
+import { Inter } from 'next/font/google';
 
 import QuestionInput from './components/QuestionInput';
 import AskQuestionButton from './components/AskQuestionButton';
 import AnswerDisplay from './components/AnswerDisplay';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
   const [question, setQuestion] = useState('');
@@ -36,14 +37,25 @@ export default function Home() {
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
     >
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Ask
+      <div className="min-h-screen flex flex-col items-center p-4">
+        <h1 className="text-4xl font-bold text-center mb-4">Ask My PDF</h1>
+        <Image
+          src="https://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Document-icon.png"
+          alt="example"
+          width={150}
+          height={150}
+          className="w-32 h-32 mb-4"
+        />
+        <p className="text-l text-center mb-4">
+          This is an experiment in using AI to make my book's content more accessible.
         </p>
+        <p className="text-l text-center mb-4">
+          Ask a question and AI'll answer it in real-time:
+        </p>
+        <QuestionInput onQuestionChange={handleQuestionChange} />
+        <AskQuestionButton onClick={handleAskQuestionClick} />
+        <AnswerDisplay answer={answer} />
       </div>
-      <QuestionInput onQuestionChange={handleQuestionChange} />
-      <AskQuestionButton onClick={handleAskQuestionClick} />
-      <AnswerDisplay answer={answer} />
     </main>
   )
 }
