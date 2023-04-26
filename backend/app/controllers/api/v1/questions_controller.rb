@@ -31,22 +31,25 @@ module Api
         end
 
         # Check cache if question already exists
+        answer = Rails.cache.read(question)
 
-        # Read pages.csv file
-        pages_csv = '/Users/francoabaroa/Desktop/Hack_Reactor/Repos/openSource/ask/backend/resources/pdf-sample.pdf.pages.csv'
-        df = CSV.read(pages_csv, headers: true)
+        if answer.nil?
+          # Read pages.csv file
+          pages_csv = '/Users/francoabaroa/Desktop/Hack_Reactor/Repos/openSource/ask/backend/resources/pdf-sample.pdf.pages.csv'
+          df = CSV.read(pages_csv, headers: true)
 
-        # Load embeddings embeddings.csv file
-        embeddings_csv = '/Users/francoabaroa/Desktop/Hack_Reactor/Repos/openSource/ask/backend/resources/pdf-sample.pdf.embeddings.csv'
-        document_embeddings = load_embeddings(embeddings_csv)
+          # Load embeddings embeddings.csv file
+          embeddings_csv = '/Users/francoabaroa/Desktop/Hack_Reactor/Repos/openSource/ask/backend/resources/pdf-sample.pdf.embeddings.csv'
+          document_embeddings = load_embeddings(embeddings_csv)
 
-        # Answer question with context and get answer and context for saving
-        answer, context = answer_query_with_context(question, df, document_embeddings)
+          # Answer question with context and get answer and context for saving
+          answer, context = answer_query_with_context(question, df, document_embeddings)
 
-        # Cache answer, context, question
+          # Cache answer, context, question
+          cache_answer(question, answer)
+        end
 
         # Return answer
-
         render json: { answer: answer }
       end
 
@@ -170,7 +173,7 @@ module Api
       end
 
       def cache_answer(question, answer)
-        # Implementation
+        Rails.cache.write(question, answer, expires_in: 1.hour)
       end
 
       def send_to_openai_embedding_api(question, answer)
