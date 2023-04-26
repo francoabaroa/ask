@@ -24,29 +24,42 @@ module Api
   module V1
     class QuestionsController < ApplicationController
       def ask
-        question = params[:question]
+        user_question = params[:question]
 
-        unless question.end_with?('?')
-          question += '?'
+        unless user_question.end_with?('?')
+          user_question += '?'
         end
 
         # Check cache if question already exists
-        answer = Rails.cache.read(question)
+        answer = Rails.cache.read(user_question)
 
         if answer.nil?
-          # Read pages.csv file
-          pages_csv = '/Users/francoabaroa/Desktop/Hack_Reactor/Repos/openSource/ask/backend/resources/pdf-sample.pdf.pages.csv'
-          df = CSV.read(pages_csv, headers: true)
+          # Check database to see if question already exists there
+          question = Question.find_by(question: user_question)
 
-          # Load embeddings embeddings.csv file
-          embeddings_csv = '/Users/francoabaroa/Desktop/Hack_Reactor/Repos/openSource/ask/backend/resources/pdf-sample.pdf.embeddings.csv'
-          document_embeddings = load_embeddings(embeddings_csv)
+          if question
+            answer = question.answer
 
-          # Answer question with context and get answer and context for saving
-          answer, context = answer_query_with_context(question, df, document_embeddings)
+            # Add the answer to the cache for next hour
+            cache_answer(user_question, answer)
+          else
+            # Read pages file
+            pages_csv = '/Users/francoabaroa/Desktop/Hack_Reactor/Repos/openSource/ask/backend/resources/pdf-sample.pdf.pages.csv'
+            df = CSV.read(pages_csv, headers: true)
 
-          # Cache answer, context, question
-          cache_answer(question, answer)
+            # Load embeddings file
+            embeddings_csv = '/Users/francoabaroa/Desktop/Hack_Reactor/Repos/openSource/ask/backend/resources/pdf-sample.pdf.embeddings.csv'
+            document_embeddings = load_embeddings(embeddings_csv)
+
+            # Answer question with context and get answer and context for saving
+            answer, context = answer_query_with_context(user_question, df, document_embeddings)
+
+            # Add the answer to the cache for next hour
+            cache_answer(user_question, answer)
+
+            # Persist to database
+            Question.create(question: user_question, answer: answer)
+          end
         end
 
         # Return answer
