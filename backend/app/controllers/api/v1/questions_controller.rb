@@ -1,5 +1,5 @@
 require 'csv'
-require 'ruby/openai'
+require 'openai'
 require 'json'
 require 'dotenv'
 require 'gsl'
@@ -9,7 +9,6 @@ Dotenv.load('.env')
 # use ada cause newer and cheaper, can replace DOC and QUERY and SEARCH
 DOC_EMBEDDINGS_MODEL_ADA = "text-embedding-ada-002"
 COMPLETIONS_MODEL = 'text-davinci-003'
-MODEL_NAME = 'curie'
 
 MAX_SECTION_LEN = 500
 SEPARATOR = "\n* "
@@ -27,7 +26,6 @@ module Api
       def ask
         question = params[:question]
 
-        # Check if question ends in ?
         unless question.end_with?('?')
           question += '?'
         end
@@ -59,7 +57,7 @@ module Api
         # fname is the path to a CSV with exactly these named columns:
         # "title", "0", "1", ... up to the length of the embedding vectors.
         df = CSV.read(fname, headers: true)
-        max_dim = df.headers.map(&:to_i).max
+        max_dim = df.headers.reject { |header| header == 'title' }.map(&:to_i).max
         df.each_with_object({}) do |row, h|
           h[row['title']] = (0..max_dim).map { |i| row[i.to_s].to_f }
         end
@@ -73,7 +71,7 @@ module Api
                 input: text
             }
         )
-        result['choices'][0]['text'].strip
+        result["data"][0]["embedding"]
       end
 
       def vector_similarity(x, y)
@@ -89,13 +87,22 @@ module Api
         puts "===\n", prompt
 
         response = client.completions(
-          prompt: prompt,
-          temperature: COMPLETIONS_API_PARAMS['temperature'],
-          max_tokens: COMPLETIONS_API_PARAMS['max_tokens'],
-          model: COMPLETIONS_API_PARAMS['model']
+            parameters: {
+                prompt: prompt,
+                temperature: COMPLETIONS_API_PARAMS['temperature'],
+                max_tokens: COMPLETIONS_API_PARAMS['max_tokens'],
+                model: COMPLETIONS_API_PARAMS['model']
+            }
         )
 
-        return response['choices'][0]['text'].strip(" \n"), context
+        return response['choices'][0]['text'].gsub(/^[ \n]+|[ \n]+$/, ''), context
+      end
+
+      def find_row_by_title(csv_table, title)
+        csv_table.each do |row|
+          return row if row['title'] == title
+        end
+        nil
       end
 
       def construct_prompt(question, context_embeddings, df)
@@ -109,18 +116,24 @@ module Api
           chosen_sections_indexes = []
 
           most_relevant_document_sections.each do |_, section_index|
-              document_section = df.loc[df['title'] == section_index].iloc[0]
+            document_section = find_row_by_title(df, section_index)
+            separator_len = 3
 
-              chosen_sections_len += document_section.tokens + separator_len
+            unless document_section.nil?
+              tokens = document_section['tokens'].to_i
+              content = document_section['content']
+
+              chosen_sections_len += tokens + separator_len
               if chosen_sections_len > MAX_SECTION_LEN
-                  space_left = MAX_SECTION_LEN - chosen_sections_len - SEPARATOR.length
-                  chosen_sections.append(SEPARATOR + document_section.content[0, space_left])
-                  chosen_sections_indexes.append(section_index.to_s)
-                  break
+                space_left = MAX_SECTION_LEN - chosen_sections_len - SEPARATOR.length
+                chosen_sections.append(SEPARATOR + content[0, space_left])
+                chosen_sections_indexes.append(section_index.to_s)
+                break
               end
 
-              chosen_sections.append(SEPARATOR + document_section.content)
+              chosen_sections.append(SEPARATOR + content)
               chosen_sections_indexes.append(section_index.to_s)
+            end
           end
 
           header = """Sahil Lavingia is the founder and CEO of Gumroad, and the author of the book The Minimalist Entrepreneur (also known as TME). These are questions and answers by him. Please keep your answers to three sentences maximum, and speak in complete sentences. Stop speaking once your point is made.\n\nContext that may be useful, pulled from The Minimalist Entrepreneur:\n"""
