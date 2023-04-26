@@ -1,4 +1,8 @@
-export default function AskQuestionButton({ onClick }) {
+interface AskQuestionButtonProps {
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
+const AskQuestionButton: React.FC<AskQuestionButtonProps> = ({ onClick }) => {
   return (
     <button
       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -8,3 +12,5 @@ export default function AskQuestionButton({ onClick }) {
     </button>
   );
 }
+
+export default AskQuestionButton;

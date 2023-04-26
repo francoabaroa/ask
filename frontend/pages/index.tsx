@@ -11,7 +11,7 @@ export default function Home() {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
 
-  const handleQuestionChange = (newQuestion) => {
+  const handleQuestionChange = (newQuestion: string) => {
     setQuestion(newQuestion);
   };
 

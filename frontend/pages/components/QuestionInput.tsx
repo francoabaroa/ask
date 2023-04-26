@@ -1,9 +1,13 @@
 import { useState } from 'react';
 
-export default function QuestionInput({ onQuestionChange }) {
+interface QuestionInputProps {
+  onQuestionChange: (newQuestion: string) => void;
+}
+
+const QuestionInput: React.FC<QuestionInputProps> = ({ onQuestionChange }) => {
   const [question, setQuestion] = useState('');
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQuestion = event.target.value;
     setQuestion(newQuestion);
     onQuestionChange(newQuestion);
@@ -19,3 +23,5 @@ export default function QuestionInput({ onQuestionChange }) {
     />
   );
 }
+
+export default QuestionInput;
