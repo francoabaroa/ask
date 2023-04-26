@@ -6,16 +6,13 @@ require 'tokenizers'
 
 Dotenv.load('.env')
 
-# use ada cause newer and cheaper
+# Use ada cause newer and cheaper
 DOC_EMBEDDINGS_MODEL_ADA = "text-embedding-ada-002"
 
-def word_count(text)
+# Simple whitespace-based tokenization - to be replaced with better method
+def count_tokens(text)
   words = text.split
   words.size
-end
-
-def count_tokens(text)
-  word_count(text)
 end
 
 def extract_pages(page_text, index)
