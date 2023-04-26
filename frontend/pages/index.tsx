@@ -47,10 +47,10 @@ export default function Home() {
           className="w-32 h-32 mb-4"
         />
         <p className="text-l text-center mb-4">
-          This is an experiment in using AI to make my book's content more accessible.
+          {"This is an experiment in using AI to make my book's content more accessible."}
         </p>
         <p className="text-l text-center mb-4">
-          Ask a question and AI'll answer it in real-time:
+          {"Ask a question and AI'll answer it in real-time:"}
         </p>
         <QuestionInput onQuestionChange={handleQuestionChange} />
         <AskQuestionButton onClick={handleAskQuestionClick} />
