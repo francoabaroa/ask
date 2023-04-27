@@ -2,7 +2,6 @@ require 'csv'
 require 'openai'
 require 'json'
 require 'dotenv'
-require 'gsl'
 require 'resemble'
 
 Dotenv.load('.env')
@@ -200,9 +199,10 @@ module Api
       end
 
       def vector_similarity(x, y)
-        x_vec = GSL::Vector.alloc(x)
-        y_vec = GSL::Vector.alloc(y)
-        x_vec * y_vec
+        raise ArgumentError, "Input arrays must have the same length" unless x.length == y.length
+
+        dot_product = x.zip(y).map { |x_i, y_i| x_i * y_i }.reduce(:+)
+        dot_product
       end
     end
   end

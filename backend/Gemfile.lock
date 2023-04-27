@@ -71,7 +71,6 @@ GEM
     ffi (1.15.5)
     globalid (1.1.0)
       activesupport (>= 5.0)
-    gsl (2.1.0.3)
     hashery (2.1.2)
     httparty (0.21.0)
       mini_mime (>= 1.0.0)
@@ -194,7 +193,6 @@ DEPENDENCIES
   byebug
   csv
   dotenv
-  gsl
   listen (>= 3.0.5, < 3.2)
   pdf-reader
   pg
