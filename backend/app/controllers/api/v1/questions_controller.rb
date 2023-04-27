@@ -43,11 +43,11 @@ module Api
             cache_answer(user_question, answer)
           else
             # Read pages file
-            pages_csv = '/Users/francoabaroa/Desktop/Hack_Reactor/Repos/openSource/ask/backend/resources/pdf-sample.pdf.pages.csv'
+            pages_csv = File.join(Rails.root, 'resources', 'pdf-sample.pdf.pages.csv')
             df = CSV.read(pages_csv, headers: true)
 
             # Load embeddings file
-            embeddings_csv = '/Users/francoabaroa/Desktop/Hack_Reactor/Repos/openSource/ask/backend/resources/pdf-sample.pdf.embeddings.csv'
+            embeddings_csv = File.join(Rails.root, 'resources', 'pdf-sample.pdf.embeddings.csv')
             document_embeddings = load_embeddings(embeddings_csv)
 
             # Answer question with context and get answer and context for saving
