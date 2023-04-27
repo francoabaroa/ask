@@ -17,7 +17,7 @@ export default function Home() {
   };
 
   const handleAskQuestionClick = async () => {
-    const response = await fetch('http://localhost:4000/api/v1/questions/ask', {
+    const response = await fetch('https://young-escarpment-90466.herokuapp.com/api/v1/questions/ask', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
