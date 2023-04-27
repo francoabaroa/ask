@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import QuestionInput from './components/QuestionInput';
 
 const inter = Inter({ subsets: ['latin'] });
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function Home() {
   const [answer, setAnswer] = useState('');
@@ -44,7 +45,7 @@ export default function Home() {
     setLoading(true);
     const questionToAsk = luckyQuestion && luckyQuestion.length > 0 ? luckyQuestion : question;
 
-    const response = await fetch('https://young-escarpment-90466.herokuapp.com/api/v1/questions/ask', {
+    const response = await fetch(`${API_URL}/api/v1/questions/ask`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

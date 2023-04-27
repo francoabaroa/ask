@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "NEXT_PUBLIC_API_URL=https://young-escarpment-90466.herokuapp.com next build",
     "start": "next start",
     "lint": "next lint"
   },
