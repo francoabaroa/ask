@@ -5,31 +5,50 @@ import { Inter } from 'next/font/google';
 import QuestionInput from './components/QuestionInput';
 import AskQuestionButton from './components/AskQuestionButton';
 import AnswerDisplay from './components/AnswerDisplay';
+import FeelingLuckyButton from './components/FeelingLuckyButton';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
   const [answer, setAnswer] = useState('');
   const [error, setError] = useState('');
+  const [feelingLuckyQuestion, setFeelingLuckyQuestion] = useState('');
+  const [loading, setLoading] = useState(false);
   const [question, setQuestion] = useState('');
 
   const handleClearAnswer = () => {
     setAnswer('');
   };
 
+  const handleClearFeelingLucky = () => {
+    setFeelingLuckyQuestion('');
+  };
+
+  const handleFeelingLucky = () => {
+    const options = ["What is a minimalist entrepreneur?", "What is your definition of community?", "How do I decide what kind of business I should start?"],
+      random = ~~(Math.random() * options.length);
+    const randomQuestion = options[random];
+    setAnswer('');
+    setQuestion(randomQuestion);
+    setFeelingLuckyQuestion(randomQuestion);
+    handleAskQuestionClick(randomQuestion);
+  };
+
   const handleQuestionChange = (newQuestion: string) => {
     setQuestion(newQuestion);
   };
 
-  const handleAskQuestionClick = async () => {
+  const handleAskQuestionClick = async (luckyQuestion?: string) => {
     setError('');
+    setLoading(true);
+    const questionToAsk = luckyQuestion && luckyQuestion.length > 0 ? luckyQuestion : question;
 
     const response = await fetch('https://young-escarpment-90466.herokuapp.com/api/v1/questions/ask', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ question }),
+      body: JSON.stringify({ question: questionToAsk }),
     });
 
     if (response.ok) {
@@ -39,11 +58,12 @@ export default function Home() {
       setError('An error occurred: ' + response.statusText);
       console.error('Error fetching answer:', response.statusText);
     }
+    setLoading(false);
   };
 
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+      className={`flex min-h-screen flex-col items-center justify-between p-12 ${inter.className}`}
     >
       <div className="min-h-screen flex flex-col items-center p-4">
         <h1 className="text-4xl font-bold text-center mb-4">Ask My PDF</h1>
@@ -60,8 +80,11 @@ export default function Home() {
         <p className="text-l text-center mb-4">
           {"Ask a question and AI'll answer it in real-time:"}
         </p>
-        <QuestionInput clearAnswer={handleClearAnswer} onQuestionChange={handleQuestionChange} />
-        <AskQuestionButton onClick={handleAskQuestionClick} />
+        <QuestionInput clearAnswer={handleClearAnswer} clearLuckyQuestion={handleClearFeelingLucky} feelingLuckyQuestion={feelingLuckyQuestion} onQuestionChange={handleQuestionChange} />
+        <div className="justify-center items-center">
+          <AskQuestionButton loading={loading} onClick={handleAskQuestionClick} />
+          <FeelingLuckyButton loading={loading} onClick={handleFeelingLucky} />
+        </div>
         <AnswerDisplay answer={answer} />
         {error && <p>{error}</p>}
       </div>
