@@ -46,6 +46,7 @@ pdf_filename = ARGV[0] # Pass the PDF file as a command-line argument
 
 reader = PDF::Reader.new(pdf_filename)
 
+# Extract pages from PDF
 res = []
 i = 1
 reader.pages.each do |page|
@@ -64,6 +65,7 @@ CSV.open("#{pdf_filename}.pages.csv", 'w') do |csv|
   end
 end
 
+# Compute embeddings from OpenAI
 doc_embeddings = compute_doc_embeddings(res)
 CSV.open("#{pdf_filename}.embeddings.csv", "w") do |csv|
   csv << ["title"] + (0..doc_embeddings.values.first.length - 1).to_a
