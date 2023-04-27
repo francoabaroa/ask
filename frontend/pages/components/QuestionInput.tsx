@@ -19,7 +19,7 @@ const QuestionInput: React.FC<QuestionInputProps> = ({ clearAnswer, clearLuckyQu
 
   return (
     <textarea
-      className="border border-gray-300 p-2"
+      className="w-full sm:w-90 border border-gray-300 p-2"
       value={feelingLuckyQuestion && feelingLuckyQuestion.length > 0 ? feelingLuckyQuestion : question}
       onChange={handleChange}
       placeholder="Type your question here"
