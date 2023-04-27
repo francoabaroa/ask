@@ -2,10 +2,11 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
 
-import QuestionInput from './components/QuestionInput';
 import AskQuestionButton from './components/AskQuestionButton';
 import AnswerDisplay from './components/AnswerDisplay';
 import FeelingLuckyButton from './components/FeelingLuckyButton';
+import Footer from './components/Footer';
+import QuestionInput from './components/QuestionInput';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -87,6 +88,7 @@ export default function Home() {
         </div>
         <AnswerDisplay answer={answer} />
         {error && <p>{error}</p>}
+        <Footer />
       </div>
     </main>
   )
