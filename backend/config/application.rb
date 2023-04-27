@@ -35,7 +35,7 @@ module Backend
     config.api_only = true
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins 'localhost:3000', 'ask-gamma.vercel.app'
+        origins 'localhost:3000', 'ask-gamma.vercel.app', 'ask-francoisjammin1.vercel.app'
         resource '*', headers: :any, methods: [:get, :post, :options]
       end
     end
