@@ -9,8 +9,9 @@ import AnswerDisplay from './components/AnswerDisplay';
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
-  const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [error, setError] = useState('');
+  const [question, setQuestion] = useState('');
 
   const handleClearAnswer = () => {
     setAnswer('');
@@ -21,6 +22,8 @@ export default function Home() {
   };
 
   const handleAskQuestionClick = async () => {
+    setError('');
+
     const response = await fetch('https://young-escarpment-90466.herokuapp.com/api/v1/questions/ask', {
       method: 'POST',
       headers: {
@@ -33,6 +36,7 @@ export default function Home() {
       const data = await response.json();
       setAnswer(data.answer);
     } else {
+      setError('An error occurred: ' + response.statusText);
       console.error('Error fetching answer:', response.statusText);
     }
   };
@@ -59,6 +63,7 @@ export default function Home() {
         <QuestionInput clearAnswer={handleClearAnswer} onQuestionChange={handleQuestionChange} />
         <AskQuestionButton onClick={handleAskQuestionClick} />
         <AnswerDisplay answer={answer} />
+        {error && <p>{error}</p>}
       </div>
     </main>
   )
