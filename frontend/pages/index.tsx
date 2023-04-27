@@ -12,6 +12,10 @@ export default function Home() {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
 
+  const handleClearAnswer = () => {
+    setAnswer('');
+  };
+
   const handleQuestionChange = (newQuestion: string) => {
     setQuestion(newQuestion);
   };
@@ -52,7 +56,7 @@ export default function Home() {
         <p className="text-l text-center mb-4">
           {"Ask a question and AI'll answer it in real-time:"}
         </p>
-        <QuestionInput onQuestionChange={handleQuestionChange} />
+        <QuestionInput clearAnswer={handleClearAnswer} onQuestionChange={handleQuestionChange} />
         <AskQuestionButton onClick={handleAskQuestionClick} />
         <AnswerDisplay answer={answer} />
       </div>

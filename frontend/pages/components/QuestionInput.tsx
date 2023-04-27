@@ -1,13 +1,15 @@
 import { useState } from 'react';
 
 interface QuestionInputProps {
+  clearAnswer: () => void;
   onQuestionChange: (newQuestion: string) => void;
 }
 
-const QuestionInput: React.FC<QuestionInputProps> = ({ onQuestionChange }) => {
+const QuestionInput: React.FC<QuestionInputProps> = ({ clearAnswer,onQuestionChange }) => {
   const [question, setQuestion] = useState('');
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    clearAnswer();
     const newQuestion = event.target.value;
     setQuestion(newQuestion);
     onQuestionChange(newQuestion);
