@@ -83,7 +83,7 @@ export default function Home() {
           {"Ask a question and AI'll answer it in real-time:"}
         </p>
         <QuestionInput clearAnswer={handleClearAnswer} clearLuckyQuestion={handleClearFeelingLucky} feelingLuckyQuestion={feelingLuckyQuestion} onQuestionChange={handleQuestionChange} />
-        <div className="justify-center items-center">
+        <div className="flex flex-wrap justify-center">
           <AskQuestionButton loading={loading} onClick={handleAskQuestionClick} />
           <FeelingLuckyButton loading={loading} onClick={handleFeelingLucky} />
         </div>
