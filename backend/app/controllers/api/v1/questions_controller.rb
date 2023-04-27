@@ -40,7 +40,6 @@ module Api
 
           if question
             answer = question.answer
-
             # Add the answer to the cache for next hour
             cache_answer(user_question, answer)
           else
@@ -64,40 +63,10 @@ module Api
         end
 
         voice = get_answer_as_voice(answer)
-
-        # Return answer
         render json: { answer: answer, voice: voice }
       end
 
       private
-
-      def load_embeddings(fname)
-        # Read the document embeddings and their keys from a CSV.
-        # fname is the path to a CSV with exactly these named columns:
-        # "title", "0", "1", ... up to the length of the embedding vectors.
-        df = CSV.read(fname, headers: true)
-        max_dim = df.headers.reject { |header| header == 'title' }.map(&:to_i).max
-        df.each_with_object({}) do |row, h|
-          h[row['title']] = (0..max_dim).map { |i| row[i.to_s].to_f }
-        end
-      end
-
-      def get_embedding(text)
-        client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
-        result = client.embeddings(
-            parameters: {
-                model: DOC_EMBEDDINGS_MODEL_ADA,
-                input: text
-            }
-        )
-        result["data"][0]["embedding"]
-      end
-
-      def vector_similarity(x, y)
-        x_vec = GSL::Vector.alloc(x)
-        y_vec = GSL::Vector.alloc(y)
-        x_vec * y_vec
-      end
 
       def answer_query_with_context(query, df, document_embeddings)
         client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
@@ -117,11 +86,8 @@ module Api
         return response['choices'][0]['text'].gsub(/^[ \n]+|[ \n]+$/, ''), context
       end
 
-      def find_row_by_title(csv_table, title)
-        csv_table.each do |row|
-          return row if row['title'] == title
-        end
-        nil
+      def cache_answer(question, answer)
+        Rails.cache.write(question, answer, expires_in: 1.hour)
       end
 
       def construct_prompt(question, context_embeddings, df)
@@ -171,17 +137,11 @@ module Api
           return (header + chosen_sections.join + question_1 + question_2 + question_3 + question_4 + question_5 + question_6 + question_7 + question_8 + question_9 + question_10 + "\n\n\nQ: " + question + "\n\nA: "), (chosen_sections.join)
       end
 
-      def order_document_sections_by_query_similarity(query, contexts)
-          """
-          Find the query embedding for the supplied query, and compare it against all of the pre-calculated document embeddings
-          to find the most relevant sections.
-          Return the list of document sections, sorted by relevance in descending order.
-          """
-          query_embedding = get_embedding(query)
-
-          document_similarities = contexts.map { |doc_index, doc_embedding| [vector_similarity(query_embedding, doc_embedding), doc_index] }.sort.reverse
-
-          return document_similarities
+      def find_row_by_title(csv_table, title)
+        csv_table.each do |row|
+          return row if row['title'] == title
+        end
+        nil
       end
 
       def get_answer_as_voice(answer)
@@ -204,16 +164,45 @@ module Api
         )
       end
 
-      def search_book_embeddings(question)
-        # Implementation
+      def get_embedding(text)
+        client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
+        result = client.embeddings(
+            parameters: {
+                model: DOC_EMBEDDINGS_MODEL_ADA,
+                input: text
+            }
+        )
+        result["data"][0]["embedding"]
       end
 
-      def cache_answer(question, answer)
-        Rails.cache.write(question, answer, expires_in: 1.hour)
+      def load_embeddings(fname)
+        # Read the document embeddings and their keys from a CSV.
+        # fname is the path to a CSV with exactly these named columns:
+        # "title", "0", "1", ... up to the length of the embedding vectors.
+        df = CSV.read(fname, headers: true)
+        max_dim = df.headers.reject { |header| header == 'title' }.map(&:to_i).max
+        df.each_with_object({}) do |row, h|
+          h[row['title']] = (0..max_dim).map { |i| row[i.to_s].to_f }
+        end
       end
 
-      def send_to_openai_embedding_api(question, answer)
-        # Implementation
+      def order_document_sections_by_query_similarity(query, contexts)
+          """
+          Find the query embedding for the supplied query, and compare it against all of the pre-calculated document embeddings
+          to find the most relevant sections.
+          Return the list of document sections, sorted by relevance in descending order.
+          """
+          query_embedding = get_embedding(query)
+
+          document_similarities = contexts.map { |doc_index, doc_embedding| [vector_similarity(query_embedding, doc_embedding), doc_index] }.sort.reverse
+
+          return document_similarities
+      end
+
+      def vector_similarity(x, y)
+        x_vec = GSL::Vector.alloc(x)
+        y_vec = GSL::Vector.alloc(y)
+        x_vec * y_vec
       end
     end
   end
