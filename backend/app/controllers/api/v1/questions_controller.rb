@@ -3,6 +3,7 @@ require 'openai'
 require 'json'
 require 'dotenv'
 require 'gsl'
+require 'resemble'
 
 Dotenv.load('.env')
 
@@ -62,8 +63,10 @@ module Api
           end
         end
 
+        voice = get_answer_as_voice(answer)
+
         # Return answer
-        render json: { answer: answer }
+        render json: { answer: answer, voice: voice }
       end
 
       private
@@ -179,6 +182,26 @@ module Api
           document_similarities = contexts.map { |doc_index, doc_embedding| [vector_similarity(query_embedding, doc_embedding), doc_index] }.sort.reverse
 
           return document_similarities
+      end
+
+      def get_answer_as_voice(answer)
+        Resemble.api_key = ENV['RESEMBLE_API_KEY']
+        project_uuid = 'b6f4979f'
+        voice_uuid = 'd88df2b0'
+        # Sync requests are currently disabled
+        Resemble::V2::Clip.create_sync(
+          project_uuid,
+          voice_uuid,
+          body: answer,
+          title: nil,
+          sample_rate: nil,
+          output_format: nil,
+          precision: nil,
+          include_timestamps: nil,
+          is_public: nil,
+          is_archived: nil,
+          raw: nil
+        )
       end
 
       def search_book_embeddings(question)
