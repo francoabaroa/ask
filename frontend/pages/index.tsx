@@ -27,7 +27,7 @@ export default function Home() {
   };
 
   const handleFeelingLucky = () => {
-    const options = ["What is a minimalist entrepreneur?", "What is your definition of community?", "How do I decide what kind of business I should start?"],
+    const options = ["Who is Lyra's daemon?", "Who tried to poison Lord Asriel?", "What is Tokay?"],
       random = ~~(Math.random() * options.length);
     const randomQuestion = options[random];
     setAnswer('');
@@ -68,19 +68,19 @@ export default function Home() {
       className={`flex min-h-screen flex-col items-center justify-between pt-12 ${inter.className}`}
     >
       <div className="min-h-screen flex flex-col items-center p-4">
-        <h1 className="text-4xl font-bold text-center mb-4">Ask My PDF</h1>
+        <h1 className="text-4xl font-bold text-center mb-4">Ask My Book</h1>
         <Image
-          src="https://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Document-icon.png"
+          src="https://icons.iconarchive.com/icons/robinweatherall/library/256/book-icon.png"
           alt="example"
           width={150}
           height={150}
           className="w-32 h-32 mb-4"
         />
         <p className="text-l text-center mb-4">
-          {"This is an experiment in using AI to make my book's content more accessible."}
+          {"This is an experiment in using AI to make the content of The Golden Compass more accessible."}
         </p>
         <p className="text-l text-center mb-4">
-          {"Ask a question and AI'll answer it in real-time:"}
+          {"Ask a question about the book and AI'll answer it in real-time:"}
         </p>
         <QuestionInput clearAnswer={handleClearAnswer} clearLuckyQuestion={handleClearFeelingLucky} feelingLuckyQuestion={feelingLuckyQuestion} onQuestionChange={handleQuestionChange} />
         <div className="flex flex-wrap justify-center">
