@@ -27,7 +27,18 @@ export default function Home() {
   };
 
   const handleFeelingLucky = () => {
-    const options = ["Who is Lyra's daemon?", "Who tried to poison Lord Asriel?", "What is Tokay?"],
+    const options = [
+      "Who is Lyra's daemon?",
+      "Who tried to poison Lord Asriel?",
+      "What is Tokay?",
+      "What does the Retiring Room look like?",
+      "Who is Ma Costa's daemon?",
+      "Who is Colonel Carborn?",
+      "Who is Tony Costa's little brother?",
+      "What does Lord Asriel say he will bring back from the North for Lyra?",
+      "Where does Tony live?",
+      "Who are The Gobblers?",
+    ],
       random = ~~(Math.random() * options.length);
     const randomQuestion = options[random];
     setAnswer('');

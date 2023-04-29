@@ -128,11 +128,12 @@ module Api
           question_6 = "\n\n\nQ: Who are The Gobblers?\n\nA: The Gobblers are a mysterious group of enchanters who are said to kidnap children and take them away to unknown places."
           question_7 = "\n\n\nQ: What years was Simon Le Clerc master? \n\nA: 1765-1789."
           question_8 = "\n\n\nQ: Who is Ma Costa's daemon?\n\nA: Ma Costa's daemon is a hawk."
-          question_9 = "\n\n\nQ: Who is Hugh Lovat?\n\nA: A kitchen boy from St. Michael's."
-          question_10 = "\n\n\nQ: Who is Colonel Carborn?\n\nA: Colonel Carborn is an elderly gentleman with a red tie who made the first balloon flight over the North Pole."
-          question_11 = "\n\n\nQ: Who is Tony Costa's little brother?\n\nA: Tony Costa's little brother is Billy Costa."
+          question_9 = "\n\n\nQ: Who is Colonel Carborn?\n\nA: Colonel Carborn is an elderly gentleman with a red tie who made the first balloon flight over the North Pole."
+          question_10 = "\n\n\nQ: Who is Tony Costa's little brother?\n\nA: Tony Costa's little brother is Billy Costa."
+          question_11 = "\n\n\nQ: What does Lord Asriel say he will bring back from the North for Lyra?\n\nA: A walrus tusk."
 
-          return (header + chosen_sections.join + question_1 + question_2 + question_3 + question_4 + question_5 + question_6 + question_7 + question_8 + question_9 + question_10 + question_11 + "\n\n\nQ: " + question + "\n\nA: "), (chosen_sections.join)
+
+          return (header + chosen_sections.join + question_1 + question_2 + question_3 + question_4 + question_5 + question_6 + question_7 + question_8 + question_9 + question_9 + question_10 + question_11 + "\n\n\nQ: " + question + "\n\nA: "), (chosen_sections.join)
       end
 
       def find_row_by_title(csv_table, title)
