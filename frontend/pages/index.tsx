@@ -88,7 +88,7 @@ export default function Home() {
           className="w-32 h-32 mb-4"
         />
         <p className="text-l text-center mb-4">
-          {"This is an experiment in using AI to make the content of The Golden Compass: Northern Lights more accessible."}
+          {"This is an experiment in using AI to make the content of The Golden Compass accessible."}
         </p>
         <p className="text-l text-center mb-4">
           {"Ask a question about the book and AI'll answer it in real-time:"}
